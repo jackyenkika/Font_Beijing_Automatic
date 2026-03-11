@@ -35,7 +35,7 @@ def close_datepicker(page):
 def click_item(page, selector, text=None, delay=0):
     btn = page.locator(selector, has_text=text) if text else page.locator(selector)
     btn.scroll_into_view_if_needed()
-    btn.wait_for(state="visible", timeout=5000)
+    btn.wait_for(state="visible", timeout=30000)
     btn.click(delay=delay)
 
 def prevent_pdf_new_tab(page):
@@ -104,7 +104,7 @@ def fill_person_block(page, container_selector, radio_name, sign_select_name):
             return divs.some(d => d.offsetParent !== null && d.style.display !== 'none');
         }}
         """,
-        timeout=10000
+        timeout=30000
     )
 
     page.evaluate(
@@ -149,18 +149,18 @@ def fill_person_block(page, container_selector, radio_name, sign_select_name):
 def stage_0_guide(page):
     log("Stage 0", "導引 & 進入新建登記")
 
-    page.goto(LOGIN_URL,timeout=10000)
-    page.wait_for_url("**/user/welcome", timeout=10000)
+    page.goto(LOGIN_URL,timeout=30000)
+    page.wait_for_url("**/user/welcome", timeout=30000)
     page.wait_for_load_state("networkidle")
     print("已進入:「登入後頁面」")
 
-    page.goto(ADD_NEW_URL,timeout=10000, wait_until="networkidle")
+    page.goto(ADD_NEW_URL,timeout=30000, wait_until="networkidle")
     print("已進入:「新建登記頁」")
 
 def stage_1_agreement(page):
     log("Stage 1", "同意條款")
     
-    page.locator("#dczdj-input").wait_for(state="visible",timeout=5000)
+    page.locator("#dczdj-input").wait_for(state="visible",timeout=30000)
     page.locator("#dczdj-input").check()
     print("已勾選:同意條款")
 
@@ -179,7 +179,7 @@ def stage_2_1_product_info(page,WORK_NAME):
     print("已點擊:選擇類別")
   
     layer = page.locator("div.layui-layer:has(div.layui-layer-content)").first
-    layer.wait_for(state="attached", timeout=10000)
+    layer.wait_for(state="attached", timeout=30000)
     page.wait_for_timeout(500)  # 動畫稍微等一下
     page.locator("span#tree_10_check").click(force=True)
     print("已點擊:美術作品")
@@ -194,13 +194,13 @@ def stage_2_2_product_info(page, WORK_DONE_DATE):
     log("Stage 2-2", "填寫作品信息")
 
     radio_original = page.locator("input[name='pro_nature'][value='0']:not([disabled])")
-    radio_original.wait_for(state="visible", timeout=5000)
+    radio_original.wait_for(state="visible", timeout=30000)
     radio_original.check()
     print("已選擇作品性質:原创")
 
     work_date_str = WORK_DONE_DATE.strftime("%Y-%m-%d")
     date_input = page.locator("#workTime")
-    date_input.wait_for(state="visible", timeout=5000)
+    date_input.wait_for(state="visible", timeout=30000)
     # 移除 readonly
     page.evaluate("""
         document.querySelector('#workTime').removeAttribute('readonly')
@@ -210,7 +210,7 @@ def stage_2_2_product_info(page, WORK_DONE_DATE):
     print(f"已填寫製作日期: {work_date_str}")
 
     country_select = page.locator("#WorkCountry")
-    country_select.wait_for(state="visible", timeout=5000)
+    country_select.wait_for(state="visible", timeout=30000)
     country_select.select_option(label="中国")
     print("已选择国家:中国")
 
@@ -220,7 +220,7 @@ def stage_2_2_product_info(page, WORK_DONE_DATE):
             const sel = document.querySelector('#WorkProvince');
             return sel && sel.options.length > 1;
         }
-    """, timeout=5000)
+    """, timeout=30000)
     province_select.select_option(label="北京")
     print("已选择省份:北京")
 
@@ -230,12 +230,12 @@ def stage_2_2_product_info(page, WORK_DONE_DATE):
             const sel = document.querySelector('#WorkCity');
             return sel && sel.options.length >= 1;
         }
-    """, timeout=5000)
+    """, timeout=30000)
     city_select.select_option(label="北京")
     print("已选择城市:北京")
 
     unpublished_radio = page.locator("input[name='pub_type'][value='0']").first
-    unpublished_radio.wait_for(state="visible", timeout=5000)
+    unpublished_radio.wait_for(state="visible", timeout=30000)
     unpublished_radio.check()
     print("已選擇發表狀態:未发表")
 
@@ -247,7 +247,7 @@ def stage_2_3_product_info(page,DECLARATION_OWNERSHIP_PATH):
     log("Stage 2-3", "填寫作品信息")
 
     original_radio = page.get_by_label("原始")
-    original_radio.wait_for(state="visible", timeout=5000)
+    original_radio.wait_for(state="visible", timeout=30000)
     original_radio.check()
     print("已選擇权利取得方式:原始")
 
@@ -266,7 +266,7 @@ def stage_2_4_author_info(page):
     log("Stage 2-4", "填寫作者信息")
 
     batch_select = page.locator("#authorNum")
-    batch_select.wait_for(state="visible", timeout=10000)
+    batch_select.wait_for(state="visible", timeout=30000)
     batch_select.select_option(value="1")
     print("已選擇:1 人")
 
@@ -321,20 +321,20 @@ def stage_2_8_product_description(page,PRODUCT_HIGHTLIGHT,PRODUCT_COPYRIGHT_HOLD
     log("Stage 2-8", "作品说明书")
 
     textarea_highlight = page.locator("textarea#central_content")
-    textarea_highlight.wait_for(state="visible", timeout=10000)
+    textarea_highlight.wait_for(state="visible", timeout=30000)
     textarea_highlight.scroll_into_view_if_needed()
     textarea_highlight.fill(PRODUCT_HIGHTLIGHT)
     print("已填入:中心内容及作品特点")
 
 
     textarea_holder = page.locator("textarea#introduction")
-    textarea_holder.wait_for(state="visible", timeout=10000)
+    textarea_holder.wait_for(state="visible", timeout=30000)
     textarea_holder.scroll_into_view_if_needed()
     textarea_holder.fill(PRODUCT_COPYRIGHT_HOLDER)
     print("已填入:著作权人简介")
 
     textarea_process = page.locator("textarea#process")
-    textarea_process.wait_for(state="visible", timeout=10000)
+    textarea_process.wait_for(state="visible", timeout=30000)
     textarea_process.scroll_into_view_if_needed()
     textarea_process.fill(PRODUCT_CREATIVE_PROCESS)
     print("已填入:创作过程")
@@ -347,9 +347,9 @@ def stage_2_9_preview_description(page):
     log("Stage 2-9", "预览作品說明書")
 
     wait_overlay_gone(page)
-    page.wait_for_selector(".dczdj-model-7", state="visible", timeout=5000)
+    page.wait_for_selector(".dczdj-model-7", state="visible", timeout=30000)
     click_item(page, ".dczdj-model-7 button.dczdj-btn","保存，下一步")
-    page.wait_for_selector(".dczdj-model-8", state="visible", timeout=10000)
+    page.wait_for_selector(".dczdj-model-8", state="visible", timeout=30000)
     print("已點擊:保存，下一步")
 
 def stage_2_10_preview_waranty(page):
@@ -378,7 +378,7 @@ def stage_2_12_download_file(page,WORK_NAME,DOCUMENT_DOWNLOAD_PATH):
     rows = page.locator("#affirmShow .dczdj-8-container-detail").filter(
         has=page.locator("a", has_text="浏览确认")
     )
-    rows.first.wait_for(state="visible", timeout=10000)
+    rows.first.wait_for(state="visible", timeout=30000)
     count = rows.count()
     print(f"浏览确认檔案數量：{count}")
 

@@ -50,10 +50,22 @@ def is_login_state_valid(storage_path: str) -> bool:
             # 判斷是否被導向登入頁
             if "Login" in page.url:
                 browser.close()
+                  # ❌ Cookie 無效 → 刪除舊的 login_state.json
+                try:
+                    os.remove(storage_path)
+                    log("INFO", f"舊的登入狀態已刪除: {storage_path}")
+                except Exception as e:
+                    log("ERROR", f"刪除登入狀態失敗: {e}")
                 return False
 
             browser.close()
             return True
         except Exception as e:
             browser.close()
+             # ❌ 發生例外也刪除舊的 login_state.json
+            try:
+                os.remove(storage_path)
+                log("INFO", f"因例外刪除登入狀態: {storage_path}")
+            except Exception as e2:
+                log("ERROR", f"刪除登入狀態失敗: {e2}")
             return False
